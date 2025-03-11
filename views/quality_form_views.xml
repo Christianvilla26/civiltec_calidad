@@ -103,6 +103,37 @@
         <field name="model">quality.form.instance</field>
         <field name="arch" type="xml">
             <form string="Instancia de Formulario de Calidad">
+            <header>
+                <!-- Statusbar field -->
+                <field name="state" widget="statusbar"
+                       statusbar_visible="borrador,en_proceso,en_revision,realizado,cancelado"
+                       statusbar_status="borrador"/>
+
+                <!-- Buttons for each transition -->
+                <button name="action_en_proceso"
+                        type="object"
+                        string="En proceso"
+                        states="borrador"
+                        class="oe_highlight"/>
+
+                <button name="action_en_revision"
+                        type="object"
+                        string="Enviar para Revisión"
+                        states="en_proceso"
+                        class="oe_highlight"/>
+
+                <button name="action_realizado"
+                        type="object"
+                        string="Realizado"
+                        states="en_revision"
+                        class="oe_highlight"/>
+
+                <button name="action_cancelar"
+                        type="object"
+                        string="Cancelar"
+                        states="borrador,en_proceso,en_revision"
+                        class="oe_highlight"/>
+            </header>
                 <sheet>
                     <group>
                         <field name="name" readonly="1"/>
