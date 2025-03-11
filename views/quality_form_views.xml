@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1) QUALITY FORM TEMPLATE VIEWS -->
+    <record id="view_quality_form_template_tree" model="ir.ui.view">
+        <field name="name">quality.form.template.tree</field>
+        <field name="model">quality.form.template</field>
+        <field name="arch" type="xml">
+            <tree string="Plantillas de Formulario de Calidad">
+                <field name="name"/>
+                <field name="description"/>
+                <!-- Add more fields here if needed -->
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_quality_form_template_form" model="ir.ui.view">
+        <field name="name">quality.form.template.form</field>
+        <field name="model">quality.form.template</field>
+        <field name="arch" type="xml">
+            <form string="Plantillas de Formulario de Calidad">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <page string="Questions">
+                            <field name="question_ids">
+                                <tree editable="bottom" string="Questions">
+                                    <field name="name"/>
+                                    <field name="question_type"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 2) QUALITY FORM TEMPLATE ACTION -->
+    <record id="action_quality_form_template" model="ir.actions.act_window">
+        <field name="name">Quality Form Templates</field>
+        <field name="res_model">quality.form.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your first Quality Form Template
+            </p>
+        </field>
+    </record>
+
+    <!-- 3) QUALITY FORM QUESTION VIEWS -->
+    <record id="view_quality_form_question_tree" model="ir.ui.view">
+        <field name="name">quality.form.question.tree</field>
+        <field name="model">quality.form.question</field>
+        <field name="arch" type="xml">
+            <tree string="Quality Form Questions">
+                <field name="name"/>
+                <field name="question_type"/>
+                <field name="form_template_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_quality_form_question_form" model="ir.ui.view">
+        <field name="name">quality.form.question.form</field>
+        <field name="model">quality.form.question</field>
+        <field name="arch" type="xml">
+            <form string="Quality Form Question">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="question_type"/>
+                        <field name="form_template_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 4) QUALITY FORM QUESTION ACTION -->
+    <record id="action_quality_form_question" model="ir.actions.act_window">
+        <field name="name">Quality Form Questions</field>
+        <field name="res_model">quality.form.question</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- 5) QUALITY FORM INSTANCE VIEWS -->
+    <record id="view_quality_form_instance_tree" model="ir.ui.view">
+        <field name="name">quality.form.instance.tree</field>
+        <field name="model">quality.form.instance</field>
+        <field name="arch" type="xml">
+            <tree string="Quality Form Instances">
+                <field name="name"/>
+                <field name="form_template_id"/>
+                <field name="property_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_quality_form_instance_form" model="ir.ui.view">
+        <field name="name">quality.form.instance.form</field>
+        <field name="model">quality.form.instance</field>
+        <field name="arch" type="xml">
+            <form string="Quality Form Instance">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="form_template_id"/>
+                        <field name="property_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Responses">
+                            <field name="response_ids">
+                                <tree editable="bottom" string="Responses">
+                                    <field name="question_id"/>
+                                    <field name="question_text" readonly="1"/>
+                                    <!-- Depending on the question_type, you decide which of these to show -->
+                                    <field name="answer_text"/>
+                                    <field name="answer_number"/>
+                                    <field name="answer_boolean"/>
+                                    <field name="answer_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 6) QUALITY FORM INSTANCE ACTION -->
+    <record id="action_quality_form_instance" model="ir.actions.act_window">
+        <field name="name">Quality Form Instances</field>
+        <field name="res_model">quality.form.instance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your first Quality Form Instance
+            </p>
+        </field>
+    </record>
+
+    <!-- 7) QUALITY FORM RESPONSE VIEWS -->
+    <record id="view_quality_form_response_tree" model="ir.ui.view">
+        <field name="name">quality.form.response.tree</field>
+        <field name="model">quality.form.response</field>
+        <field name="arch" type="xml">
+            <tree string="Quality Form Responses">
+                <field name="question_text"/>
+                <field name="answer_text"/>
+                <field name="answer_number"/>
+                <field name="answer_boolean"/>
+                <field name="answer_date"/>
+                <field name="form_instance_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_quality_form_response_form" model="ir.ui.view">
+        <field name="name">quality.form.response.form</field>
+        <field name="model">quality.form.response</field>
+        <field name="arch" type="xml">
+            <form string="Quality Form Response">
+                <sheet>
+                    <group>
+                        <field name="question_id"/>
+                        <field name="question_text" readonly="1"/>
+                        <field name="answer_text"/>
+                        <field name="answer_number"/>
+                        <field name="answer_boolean"/>
+                        <field name="answer_date"/>
+                        <field name="form_instance_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 8) QUALITY FORM RESPONSE ACTION -->
+    <record id="action_quality_form_response" model="ir.actions.act_window">
+        <field name="name">Quality Form Responses</field>
+        <field name="res_model">quality.form.response</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MENUS -->
+    <!-- Top-level menu (adjust the sequence or parent as needed) -->
+    <menuitem id="quality_menu_root"
+              name="Quality"
+              sequence="10"
+              groups="base.group_user"/>
+              
+    <!-- Submenu + actions for each model -->
+    <menuitem id="menu_quality_form_template"
+              name="Form Templates"
+              parent="quality_menu_root"
+              sequence="10"
+              action="action_quality_form_template"/>
+              
+    <menuitem id="menu_quality_form_question"
+              name="Form Questions"
+              parent="quality_menu_root"
+              sequence="20"
+              action="action_quality_form_question"/>
+
+    <menuitem id="menu_quality_form_instance"
+              name="Form Instances"
+              parent="quality_menu_root"
+              sequence="30"
+              action="action_quality_form_instance"/>
+              
+    <menuitem id="menu_quality_form_response"
+              name="Form Responses"
+              parent="quality_menu_root"
+              sequence="40"
+              action="action_quality_form_response"/>
+
+</odoo>

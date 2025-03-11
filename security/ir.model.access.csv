@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_quality_form_template,Access Quality Form Template,model_quality_form_template,,1,1,1,1
+access_quality_form_question,Access Quality Form Question,model_quality_form_question,,1,1,1,1
+access_quality_form_instance,Access Quality Form Instance,model_quality_form_instance,,1,1,1,1
+access_quality_form_response,Access Quality Form Response,model_quality_form_response,,1,1,1,1
