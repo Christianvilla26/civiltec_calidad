@@ -62,6 +62,26 @@ class QualityFormInstance(models.Model):
         string="Respuestas"
     )
 
+    state = fields.Selection([
+        ('borrador', 'Borrador'),
+        ('en_proceso', 'En proceso'),
+        ('en_revision', 'Enviar para revisión'),
+        ('realizado', 'Realizado'),
+        ('cancelado', 'Cancelado'),
+    ], string="Estado", default='borrador')
+
+    def action_en_proceso(self):
+        self.state = 'en_proceso'
+
+    def action_en_revision(self):
+        self.state = 'en_revision'
+
+    def action_realizado(self):
+        self.state = 'realizado'
+
+    def action_cancelar(self):
+        self.state = 'cancelado'
+
     @api.depends('form_template_id', 'property_id')
     def _compute_form_instance_name(self):
         """Calcula el nombre de la encuesta combinando la plantilla y la propiedad."""
