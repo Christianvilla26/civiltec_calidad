@@ -12,6 +12,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/quality_form_views.xml',
+        'reports/report_checklist_template.xml',
+        'reports/report_checklist_action.xml',
     ],
     'qweb': [],
     'installable': True,

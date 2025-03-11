@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- 1) The QWeb Template -->
+    <template id="report_checklist_template">
+        <!-- Use Odoo's standard layout for headers/footers -->
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <!-- Header Section -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <!-- Left side: Title -->
+                    <div>
+                        <h3 style="margin: 0;">F-FP-26 Check list de revisión de masilla y pintura</h3>
+                    </div>
+                    <!-- Right side: Version & Date -->
+                    <div style="text-align: right;">
+                        <p style="margin: 0;">Versión 1</p>
+                        <p style="margin: 0;">Junio 2024</p>
+                    </div>
+                </div>
+                <hr/>
+
+                <!-- Project / Apartment Info -->
+                <table style="width: 100%; margin-bottom: 20px;">
+                    <tr>
+                        <td style="width: 100px;"><strong>Proyecto</strong></td>
+                        <td>
+                            <!-- Example: doc.property_id.name if referencing a property -->
+                            <span t-esc="doc.property_id.name or ''"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Apartamento</strong></td>
+                        <td>
+                            <!-- If you store apartment info in your model, reference it here -->
+                            <span t-esc="doc.apartment or ''"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Main Checklist Table -->
+                <table class="table table-sm o_main_table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #000;">
+                            <th style="padding: 4px;">Check</th>
+                            <th style="padding: 4px;">Actividad</th>
+                            <th style="padding: 4px;">Observaciones</th>
+                            <th style="padding: 4px;">Revisado por</th>
+                            <th style="padding: 4px;">Validado por</th>
+                            <th style="padding: 4px;">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example of two static rows; adapt to your logic or loop through doc.response_ids -->
+                        <tr>
+                            <!-- A simple checkbox box -->
+                            <td style="padding: 6px;">
+                                <div style="width: 14px; height: 14px; border: 1px solid #000;"></div>
+                            </td>
+                            <td style="padding: 6px;">Correcta terminación de masilla</td>
+                            <td style="padding: 6px;"></td>
+                            <td style="padding: 6px;"></td>
+                            <td style="padding: 6px;"></td>
+                            <td style="padding: 6px;"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px;">
+                                <div style="width: 14px; height: 14px; border: 1px solid #000;"></div>
+                            </td>
+                            <td style="padding: 6px;">Correcta terminación de pintura</td>
+                            <td style="padding: 6px;"></td>
+                            <td style="padding: 6px;"></td>
+                            <td style="padding: 6px;"></td>
+                            <td style="padding: 6px;"></td>
+                        </tr>
+                        <!-- End static rows -->
+                    </tbody>
+                </table>
+
+                <!-- Optional Logo or Footer -->
+                <div style="text-align: right; margin-top: 20px;">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % (company.logo.decode())" 
+                         style="max-height: 50px;" alt="Company Logo"/>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
