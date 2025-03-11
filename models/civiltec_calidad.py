@@ -39,22 +39,26 @@ from odoo import models, fields, api
 class QualityFormInstance(models.Model):
     _name = 'quality.form.instance'
     _description = 'Encuestas de Calidad'
+    _inherit = ['mail.thread', 'mail.activity.mixin']  # Enables chatter and activity tracking
 
     name = fields.Char(
         "Nombre de la Encuesta",
         compute="_compute_form_instance_name",
-        store=True
+        store=True,
+        tracking=True  # Track changes in chatter
     )
     form_template_id = fields.Many2one(
         'quality.form.template',
         string="Plantilla de Formulario",
-        required=True
+        required=True,
+        tracking=True
     )
     property_id = fields.Many2one(
         'product.product',
         string="Propiedad",
         required=True,
-        domain=[('is_property', '=', True)]
+        domain=[('is_property', '=', True)],
+        tracking=True
     )
     response_ids = fields.One2many(
         'quality.form.response',
@@ -68,7 +72,7 @@ class QualityFormInstance(models.Model):
         ('en_revision', 'Enviar para revisión'),
         ('realizado', 'Realizado'),
         ('cancelado', 'Cancelado'),
-    ], string="Estado", default='borrador')
+    ], string="Estado", default='borrador', tracking=True)
 
     def action_en_proceso(self):
         self.state = 'en_proceso'

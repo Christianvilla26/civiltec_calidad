@@ -103,45 +103,27 @@
         <field name="model">quality.form.instance</field>
         <field name="arch" type="xml">
             <form string="Instancia de Formulario de Calidad">
-            <header>
-                <field name="state" widget="statusbar"
-                       statusbar_visible="borrador,en_proceso,en_revision,realizado,cancelado"
-                       statusbar_status="borrador"/>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="borrador,en_proceso,en_revision,realizado,cancelado" statusbar_status="borrador"/>
 
-                <button name="action_en_proceso"
-                        type="object"
-                        string="En proceso"
-                        states="borrador"
-                        class="oe_highlight"/>
+                    <button name="action_en_proceso" type="object" string="En proceso" states="borrador" class="oe_highlight"/>
 
-                <button name="action_en_revision"
-                        type="object"
-                        string="Enviar para Revisión"
-                        states="en_proceso"
-                        class="oe_highlight"/>
+                    <button name="action_en_revision" type="object" string="Enviar para Revisión" states="en_proceso" class="oe_highlight"/>
 
-                <button name="action_realizado"
-                        type="object"
-                        string="Realizado"
-                        states="en_revision"
-                        class="oe_highlight"/>
+                    <button name="action_realizado" type="object" string="Realizado" states="en_revision" class="oe_highlight"/>
 
-                <button name="action_cancelar"
-                        type="object"
-                        string="Cancelar"
-                        states="borrador,en_proceso,en_revision"
-                        class="oe_highlight"/>
-            </header>
+                    <button name="action_cancelar" type="object" string="Cancelar" states="borrador,en_proceso,en_revision" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="name" readonly="1"/>
-                        <field name="form_template_id"/>
-                        <field name="property_id"/>
+                        <field name="form_template_id" options="{'no_create': True}"/>
+                        <field name="property_id" options="{'no_create': True}" />
                     </group>
                     <notebook>
                         <page string="Respuestas">
                             <field name="response_ids">
-                                <tree editable="bottom" string="Respuestas">
+                                <tree string="Respuestas" editable="bottom" create="false" delete="false">
                                     <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
                                     <field name="answer_text"/>
@@ -150,9 +132,15 @@
                                     <field name="answer_date"/>
                                 </tree>
                             </field>
+
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -214,33 +202,14 @@
 
     <!-- MENÚS -->
     <!-- Menú de nivel superior (ajuste sequence o parent según necesidad) -->
-    <menuitem id="quality_menu_root"
-              name="Calidad"
-              sequence="10"
-              groups="base.group_user"/>
+    <menuitem id="quality_menu_root" name="Calidad" sequence="10" groups="base.group_user"/>
 
     <!-- Submenús + acciones para cada modelo -->
-    <menuitem id="menu_quality_form_template"
-              name="Plantillas de Formulario"
-              parent="quality_menu_root"
-              sequence="10"
-              action="action_quality_form_template"/>
+    <menuitem id="menu_quality_form_template" name="Plantillas de Formulario" parent="quality_menu_root" sequence="10" action="action_quality_form_template"/>
 
-    <menuitem id="menu_quality_form_question"
-              name="Preguntas de Formulario"
-              parent="quality_menu_root"
-              sequence="20"
-              action="action_quality_form_question"/>
+    <menuitem id="menu_quality_form_question" name="Preguntas de Formulario" parent="quality_menu_root" sequence="20" action="action_quality_form_question"/>
 
-    <menuitem id="menu_quality_form_instance"
-              name="Instancias de Formulario"
-              parent="quality_menu_root"
-              sequence="30"
-              action="action_quality_form_instance"/>
+    <menuitem id="menu_quality_form_instance" name="Instancias de Formulario" parent="quality_menu_root" sequence="30" action="action_quality_form_instance"/>
 
-    <menuitem id="menu_quality_form_response"
-              name="Respuestas de Formulario"
-              parent="quality_menu_root"
-              sequence="40"
-              action="action_quality_form_response"/>
+    <menuitem id="menu_quality_form_response" name="Respuestas de Formulario" parent="quality_menu_root" sequence="40" action="action_quality_form_response"/>
 </odoo>
