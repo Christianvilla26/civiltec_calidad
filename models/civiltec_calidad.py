@@ -1,7 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from collections import namedtuple
-from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 class QualityFormTemplate(models.Model):
@@ -14,6 +13,11 @@ class QualityFormTemplate(models.Model):
         'quality.form.question',
         'form_template_id',
         string="Preguntas"
+    )
+    allow_multiple_properties = fields.Boolean(
+        "Permitir selección de múltiples Propiedades",
+        default=False,
+        help="Si se activa, en las encuestas se podrá seleccionar más de una propiedad."
     )
 
 
@@ -60,6 +64,21 @@ class QualityFormInstance(models.Model):
         domain=[('is_property', '=', True)],
         tracking=True
     )
+
+    property_ids = fields.Many2many(
+        'product.product',
+        string="Propiedades",
+        domain=[('is_property', '=', True)],
+        tracking=True
+    )
+
+     # Related field to show if multiple properties are allowed
+    allow_multiple_properties = fields.Boolean(
+        related='form_template_id.allow_multiple_properties',
+        store=True,
+        string="Permitir Múltiples Propiedades"
+    )
+
     response_ids = fields.One2many(
         'quality.form.response',
         'form_instance_id',

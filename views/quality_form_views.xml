@@ -21,6 +21,7 @@
                     <group>
                         <field name="name"/>
                         <field name="description"/>
+                        <field name="allow_multiple_properties"/>
                     </group>
                     <notebook>
                         <page string="Preguntas">
@@ -117,8 +118,11 @@
                 <sheet>
                     <group>
                         <field name="name" readonly="1"/>
+                        <field name="allow_multiple_properties" invisible="1"/>
                         <field name="form_template_id" options="{'no_create': True}"/>
-                        <field name="property_id" options="{'no_create': True}" attrs="{'invisible': [('form_template_id', '=', False)]}"/>
+                        <field name="property_id" options="{'no_create': True}" attrs="{'invisible': [('allow_multiple_properties', '=', True)]}"/>
+                        <field name="property_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('allow_multiple_properties', '=', False)]}"/>
+
                     </group>
                     <notebook>
                         <page string="Respuestas">
@@ -202,7 +206,7 @@
 
     <!-- MENÚS -->
     <!-- Menú de nivel superior (ajuste sequence o parent según necesidad) -->
-    <menuitem id="quality_menu_root" name="Plataforma Arquiteectura" sequence="10" groups="base.group_user"/>
+    <menuitem id="quality_menu_root" name="Plataforma Arquitectura" sequence="10" groups="base.group_user"/>
 
 
 
@@ -210,7 +214,7 @@
 
     <menuitem id="menu_quality_form_instance" name="Instancias de Formulario" parent="quality_menu_root" sequence="30" action="action_quality_form_instance"/>
 
-        <!-- Submenús + acciones para cada modelo -->
+    <!-- Submenús + acciones para cada modelo -->
     <menuitem id="menu_quality_form_template" name="Plantillas de Formulario" parent="quality_menu_root" sequence="10" action="action_quality_form_template"/>
 
     <!-- <menuitem id="menu_quality_form_response" name="Respuestas de Formulario" parent="quality_menu_root" sequence="40" action="action_quality_form_response"/> -->
