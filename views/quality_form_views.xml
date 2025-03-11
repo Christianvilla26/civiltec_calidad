@@ -50,7 +50,7 @@
     </record>
 
     <!-- 3) QUALITY FORM QUESTION VIEWS -->
-    <record id="view_quality_form_question_tree" model="ir.ui.view">
+    <!-- <record id="view_quality_form_question_tree" model="ir.ui.view">
         <field name="name">quality.form.question.tree</field>
         <field name="model">quality.form.question</field>
         <field name="arch" type="xml">
@@ -76,14 +76,14 @@
                 </sheet>
             </form>
         </field>
-    </record>
+    </record> -->
 
     <!-- 4) QUALITY FORM QUESTION ACTION -->
-    <record id="action_quality_form_question" model="ir.actions.act_window">
+    <!-- <record id="action_quality_form_question" model="ir.actions.act_window">
         <field name="name">Preguntas de Formulario de Calidad</field>
         <field name="res_model">quality.form.question</field>
         <field name="view_mode">tree,form</field>
-    </record>
+    </record> -->
 
     <!-- 5) QUALITY FORM INSTANCE VIEWS -->
     <record id="view_quality_form_instance_tree" model="ir.ui.view">
@@ -158,7 +158,7 @@
     </record>
 
     <!-- 7) QUALITY FORM RESPONSE VIEWS -->
-    <record id="view_quality_form_response_tree" model="ir.ui.view">
+    <!-- <record id="view_quality_form_response_tree" model="ir.ui.view">
         <field name="name">quality.form.response.tree</field>
         <field name="model">quality.form.response</field>
         <field name="arch" type="xml">
@@ -171,9 +171,9 @@
                 <field name="form_instance_id"/>
             </tree>
         </field>
-    </record>
+    </record> -->
 
-    <record id="view_quality_form_response_form" model="ir.ui.view">
+    <!-- <record id="view_quality_form_response_form" model="ir.ui.view">
         <field name="name">quality.form.response.form</field>
         <field name="model">quality.form.response</field>
         <field name="arch" type="xml">
@@ -191,25 +191,27 @@
                 </sheet>
             </form>
         </field>
-    </record>
+    </record> -->
 
     <!-- 8) QUALITY FORM RESPONSE ACTION -->
-    <record id="action_quality_form_response" model="ir.actions.act_window">
+    <!-- <record id="action_quality_form_response" model="ir.actions.act_window">
         <field name="name">Respuestas de Formulario de Calidad</field>
         <field name="res_model">quality.form.response</field>
         <field name="view_mode">tree,form</field>
-    </record>
+    </record> -->
 
     <!-- MENÚS -->
     <!-- Menú de nivel superior (ajuste sequence o parent según necesidad) -->
-    <menuitem id="quality_menu_root" name="Calidad" sequence="10" groups="base.group_user"/>
+    <menuitem id="quality_menu_root" name="Plataforma Arquiteectura" sequence="10" groups="base.group_user"/>
 
-    <!-- Submenús + acciones para cada modelo -->
-    <menuitem id="menu_quality_form_template" name="Plantillas de Formulario" parent="quality_menu_root" sequence="10" action="action_quality_form_template"/>
 
-    <menuitem id="menu_quality_form_question" name="Preguntas de Formulario" parent="quality_menu_root" sequence="20" action="action_quality_form_question"/>
+
+    <!-- <menuitem id="menu_quality_form_question" name="Preguntas de Formulario" parent="quality_menu_root" sequence="20" action="action_quality_form_question"/> -->
 
     <menuitem id="menu_quality_form_instance" name="Instancias de Formulario" parent="quality_menu_root" sequence="30" action="action_quality_form_instance"/>
 
-    <menuitem id="menu_quality_form_response" name="Respuestas de Formulario" parent="quality_menu_root" sequence="40" action="action_quality_form_response"/>
+        <!-- Submenús + acciones para cada modelo -->
+    <menuitem id="menu_quality_form_template" name="Plantillas de Formulario" parent="quality_menu_root" sequence="10" action="action_quality_form_template"/>
+
+    <!-- <menuitem id="menu_quality_form_response" name="Respuestas de Formulario" parent="quality_menu_root" sequence="40" action="action_quality_form_response"/> -->
 </odoo>
