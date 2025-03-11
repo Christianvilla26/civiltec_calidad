@@ -8,7 +8,6 @@
             <tree string="Plantillas de Formulario de Calidad">
                 <field name="name"/>
                 <field name="description"/>
-                <!-- Add more fields here if needed -->
             </tree>
         </field>
     </record>
@@ -24,9 +23,9 @@
                         <field name="description"/>
                     </group>
                     <notebook>
-                        <page string="Questions">
+                        <page string="Preguntas">
                             <field name="question_ids">
-                                <tree editable="bottom" string="Questions">
+                                <tree editable="bottom" string="Preguntas">
                                     <field name="name"/>
                                     <field name="question_type"/>
                                 </tree>
@@ -40,12 +39,12 @@
 
     <!-- 2) QUALITY FORM TEMPLATE ACTION -->
     <record id="action_quality_form_template" model="ir.actions.act_window">
-        <field name="name">Quality Form Templates</field>
+        <field name="name">Plantillas de Formulario de Calidad</field>
         <field name="res_model">quality.form.template</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Create your first Quality Form Template
+                ¡Cree su primera Plantilla de Formulario de Calidad!
             </p>
         </field>
     </record>
@@ -55,7 +54,7 @@
         <field name="name">quality.form.question.tree</field>
         <field name="model">quality.form.question</field>
         <field name="arch" type="xml">
-            <tree string="Quality Form Questions">
+            <tree string="Preguntas de Formulario de Calidad">
                 <field name="name"/>
                 <field name="question_type"/>
                 <field name="form_template_id"/>
@@ -67,7 +66,7 @@
         <field name="name">quality.form.question.form</field>
         <field name="model">quality.form.question</field>
         <field name="arch" type="xml">
-            <form string="Quality Form Question">
+            <form string="Pregunta de Formulario de Calidad">
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -81,7 +80,7 @@
 
     <!-- 4) QUALITY FORM QUESTION ACTION -->
     <record id="action_quality_form_question" model="ir.actions.act_window">
-        <field name="name">Quality Form Questions</field>
+        <field name="name">Preguntas de Formulario de Calidad</field>
         <field name="res_model">quality.form.question</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -91,7 +90,7 @@
         <field name="name">quality.form.instance.tree</field>
         <field name="model">quality.form.instance</field>
         <field name="arch" type="xml">
-            <tree string="Quality Form Instances">
+            <tree string="Instancias de Formulario de Calidad">
                 <field name="name"/>
                 <field name="form_template_id"/>
                 <field name="property_id"/>
@@ -103,7 +102,7 @@
         <field name="name">quality.form.instance.form</field>
         <field name="model">quality.form.instance</field>
         <field name="arch" type="xml">
-            <form string="Quality Form Instance">
+            <form string="Instancia de Formulario de Calidad">
                 <sheet>
                     <group>
                         <field name="name" readonly="1"/>
@@ -111,12 +110,11 @@
                         <field name="property_id"/>
                     </group>
                     <notebook>
-                        <page string="Responses">
+                        <page string="Respuestas">
                             <field name="response_ids">
-                                <tree editable="bottom" string="Responses">
-                                    <field name="question_id"/>
+                                <tree editable="bottom" string="Respuestas">
+                                    <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
-                                    <!-- Depending on the question_type, you decide which of these to show -->
                                     <field name="answer_text"/>
                                     <field name="answer_number"/>
                                     <field name="answer_boolean"/>
@@ -132,12 +130,12 @@
 
     <!-- 6) QUALITY FORM INSTANCE ACTION -->
     <record id="action_quality_form_instance" model="ir.actions.act_window">
-        <field name="name">Quality Form Instances</field>
+        <field name="name">Instancias de Formulario de Calidad</field>
         <field name="res_model">quality.form.instance</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Create your first Quality Form Instance
+                ¡Cree su primera Instancia de Formulario de Calidad!
             </p>
         </field>
     </record>
@@ -147,7 +145,7 @@
         <field name="name">quality.form.response.tree</field>
         <field name="model">quality.form.response</field>
         <field name="arch" type="xml">
-            <tree string="Quality Form Responses">
+            <tree string="Respuestas de Formulario de Calidad">
                 <field name="question_text"/>
                 <field name="answer_text"/>
                 <field name="answer_number"/>
@@ -162,7 +160,7 @@
         <field name="name">quality.form.response.form</field>
         <field name="model">quality.form.response</field>
         <field name="arch" type="xml">
-            <form string="Quality Form Response">
+            <form string="Respuesta de Formulario de Calidad">
                 <sheet>
                     <group>
                         <field name="question_id"/>
@@ -180,41 +178,40 @@
 
     <!-- 8) QUALITY FORM RESPONSE ACTION -->
     <record id="action_quality_form_response" model="ir.actions.act_window">
-        <field name="name">Quality Form Responses</field>
+        <field name="name">Respuestas de Formulario de Calidad</field>
         <field name="res_model">quality.form.response</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- MENUS -->
-    <!-- Top-level menu (adjust the sequence or parent as needed) -->
+    <!-- MENÚS -->
+    <!-- Menú de nivel superior (ajuste sequence o parent según necesidad) -->
     <menuitem id="quality_menu_root"
-              name="Quality"
+              name="Calidad"
               sequence="10"
               groups="base.group_user"/>
-              
-    <!-- Submenu + actions for each model -->
+
+    <!-- Submenús + acciones para cada modelo -->
     <menuitem id="menu_quality_form_template"
-              name="Form Templates"
+              name="Plantillas de Formulario"
               parent="quality_menu_root"
               sequence="10"
               action="action_quality_form_template"/>
-              
+
     <menuitem id="menu_quality_form_question"
-              name="Form Questions"
+              name="Preguntas de Formulario"
               parent="quality_menu_root"
               sequence="20"
               action="action_quality_form_question"/>
 
     <menuitem id="menu_quality_form_instance"
-              name="Form Instances"
+              name="Instancias de Formulario"
               parent="quality_menu_root"
               sequence="30"
               action="action_quality_form_instance"/>
-              
+
     <menuitem id="menu_quality_form_response"
-              name="Form Responses"
+              name="Respuestas de Formulario"
               parent="quality_menu_root"
               sequence="40"
               action="action_quality_form_response"/>
-
 </odoo>
