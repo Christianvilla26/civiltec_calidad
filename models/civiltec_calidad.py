@@ -106,6 +106,27 @@ class QualityFormResponse(models.Model):
     _name = 'quality.form.response'
     _description = 'Respuestas de Encuestas'
 
+    state = fields.Selection([
+        ('borrador', 'Borrador'),
+        ('en_proceso', 'En proceso'),
+        ('en_revision', 'Enviar para revisión'),
+        ('realizado', 'Realizado'),
+        ('cancelado', 'Cancelado'),
+    ], string="Estado", default='borrador')
+
+
+    def action_en_proceso(self):
+        self.state = 'en_proceso'
+
+    def action_en_revision(self):
+        self.state = 'en_revision'
+
+    def action_realizado(self):
+        self.state = 'realizado'
+
+    def action_cancelar(self):
+        self.state = 'cancelado'
+
     question_id = fields.Many2one(
         'quality.form.question',
         string="Pregunta",
