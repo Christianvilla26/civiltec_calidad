@@ -118,12 +118,12 @@
                     <group>
                         <field name="name" readonly="1"/>
                         <field name="form_template_id" options="{'no_create': True}"/>
-                        <field name="property_id" options="{'no_create': True}" />
+                        <field name="property_id" options="{'no_create': True}" attrs="{'invisible': [('form_template_id', '=', False)]}"/>
                     </group>
                     <notebook>
                         <page string="Respuestas">
-                            <field name="response_ids">
-                                <tree string="Respuestas" editable="bottom" create="false" delete="false">
+                            <field name="response_ids" attrs="{'invisible': [('property_id', '=', False)]}">
+                                <tree editable="bottom" string="Respuestas" create="false" delete="false">
                                     <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
                                     <field name="answer_text"/>

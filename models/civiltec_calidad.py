@@ -1,6 +1,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from collections import namedtuple
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class QualityFormTemplate(models.Model):
     _name = 'quality.form.template'
@@ -34,18 +36,16 @@ class QualityFormQuestion(models.Model):
     ], string="Tipo de Pregunta", default='text')
 
 
-from odoo import models, fields, api
-
 class QualityFormInstance(models.Model):
     _name = 'quality.form.instance'
     _description = 'Encuestas de Calidad'
-    _inherit = ['mail.thread', 'mail.activity.mixin']  # Enables chatter and activity tracking
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         "Nombre de la Encuesta",
         compute="_compute_form_instance_name",
         store=True,
-        tracking=True  # Track changes in chatter
+        tracking=True
     )
     form_template_id = fields.Many2one(
         'quality.form.template',
@@ -74,18 +74,70 @@ class QualityFormInstance(models.Model):
         ('cancelado', 'Cancelado'),
     ], string="Estado", default='borrador', tracking=True)
 
+    # ----------------------------------------------------------
+    # Transitions / Buttons
+    # ----------------------------------------------------------
+
     def action_en_proceso(self):
+        """
+        Validations before setting the record to 'en_proceso'.
+        """
+        # Example: ensure there's at least one response
+        if not self.response_ids:
+            raise ValidationError(_("No hay respuestas, no se puede pasar a 'En proceso'."))
+
+        # If all checks pass:
         self.state = 'en_proceso'
 
     def action_en_revision(self):
+        """
+        Validations before setting the record to 'en_revision'.
+        Example: require every response to be filled if the question type demands it.
+        """
+        for line in self.response_ids:
+            # Suppose we want to ensure that 'answer_text' is filled for text questions,
+            # 'answer_number' for number questions, etc.
+            if line.question_id.question_type == 'text' and not line.answer_text:
+                raise ValidationError(_(
+                    "Debes responder la pregunta '%s' con texto antes de enviar a revisión."
+                ) % line.question_text)
+
+            if line.question_id.question_type == 'number' and not line.answer_number:
+                raise ValidationError(_(
+                    "Debes responder la pregunta '%s' con un número antes de enviar a revisión."
+                ) % line.question_text)
+
+            # You can add more checks for 'boolean' or 'date' if needed.
+
+        # If all checks pass:
         self.state = 'en_revision'
 
     def action_realizado(self):
+        """
+        Validations before marking the record as 'realizado'.
+        Example: ensure that the user has not left any question blank or incomplete.
+        """
+        # Maybe you require that absolutely all fields (text, number, etc.) are filled
+        # or any custom logic you need:
+        for line in self.response_ids:
+            if line.question_id.question_type in ('text', 'number') and not line.answer_text and not line.answer_number:
+                raise ValidationError(_(
+                    "La pregunta '%s' no está completamente respondida. Completa todas las respuestas antes de finalizar."
+                ) % line.question_text)
+
+        # If all checks pass:
         self.state = 'realizado'
 
     def action_cancelar(self):
+        """
+        Validation before canceling the record, if needed.
+        """
+        # Example: check if user is sure or if certain conditions must be met
         self.state = 'cancelado'
 
+    # ----------------------------------------------------------
+    # Compute & Onchange
+    # ----------------------------------------------------------
     @api.depends('form_template_id', 'property_id')
     def _compute_form_instance_name(self):
         """Calcula el nombre de la encuesta combinando la plantilla y la propiedad."""
@@ -104,32 +156,18 @@ class QualityFormInstance(models.Model):
                 }))
             self.response_ids = response_data  # Asigna valores por defecto
 
+    def unlink(self):
+        """Only allow deletion if the record is in 'borrador' state."""
+        for record in self:
+            if record.state != 'borrador':
+                raise ValidationError("Solo se pueden eliminar registros en estado 'Borrador'.")
+        return super(QualityFormInstance, self).unlink()
+
 
 
 class QualityFormResponse(models.Model):
     _name = 'quality.form.response'
     _description = 'Respuestas de Encuestas'
-
-    state = fields.Selection([
-        ('borrador', 'Borrador'),
-        ('en_proceso', 'En proceso'),
-        ('en_revision', 'Enviar para revisión'),
-        ('realizado', 'Realizado'),
-        ('cancelado', 'Cancelado'),
-    ], string="Estado", default='borrador')
-
-
-    def action_en_proceso(self):
-        self.state = 'en_proceso'
-
-    def action_en_revision(self):
-        self.state = 'en_revision'
-
-    def action_realizado(self):
-        self.state = 'realizado'
-
-    def action_cancelar(self):
-        self.state = 'cancelado'
 
     question_id = fields.Many2one(
         'quality.form.question',
