@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- 1) The QWeb Template -->
     <template id="report_checklist_template">
-        <!-- Use Odoo's standard layout for headers/footers -->
         <t t-call="web.basic_layout">
             <div class="page">
-                <!-- Header Section -->
+                <t t-foreach="docs" t-as="doc">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <!-- Left side: Title -->
                     <div>
-                        <h3 style="margin: 0;">F-FP-26 Check list de revisión de masilla y pintura</h3>
+                        <h3 style="margin: 0;">
+                            <span t-field="doc.name"/>
+                        </h3>
                     </div>
-                    <!-- Right side: Version & Date -->
                     <div style="text-align: right;">
-                        <p style="margin: 0;">Versión 1</p>
+                        <p style="margin: 0;">
+                        <span t-field="doc.state"/>
+                        </p>
                         <p style="margin: 0;">Junio 2024</p>
                     </div>
                 </div>
                 <hr/>
-
-                <!-- Project / Apartment Info -->
                 <table style="width: 100%; margin-bottom: 20px;">
                     <tr>
                         <td style="width: 100px;"><strong>Proyecto</strong></td>
                         <td>
-                            <!-- Example: doc.property_id.name if referencing a property -->
-                            <span t-esc="doc.property_id.name or ''"/>
+                            <span t-esc="doc.property_id.name"/>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Apartamento</strong></td>
                         <td>
                             <!-- If you store apartment info in your model, reference it here -->
-                            <span t-esc="doc.apartment or ''"/>
+                            <span t-esc="doc.property_id"/>
                         </td>
                     </tr>
                 </table>
@@ -78,9 +75,8 @@
 
                 <!-- Optional Logo or Footer -->
                 <div style="text-align: right; margin-top: 20px;">
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % (company.logo.decode())" 
-                         style="max-height: 50px;" alt="Company Logo"/>
                 </div>
+                </t>
             </div>
         </t>
     </template>
