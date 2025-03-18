@@ -15,6 +15,7 @@
         'reports/report_checklist_template.xml',
         'reports/report_checklist_action.xml',
     ],
+    'images': ['static/description/icon.png'],
     'qweb': [],
     'installable': True,
     'application': True,

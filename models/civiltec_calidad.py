@@ -93,6 +93,17 @@ class QualityFormInstance(models.Model):
         ('cancelado', 'Cancelado'),
     ], string="Estado", default='borrador', tracking=True)
 
+    revision_user_id = fields.Many2one(
+        'res.users',
+        string="Aprobado por (Revisión)",
+        readonly=True
+    )
+
+    def action_en_revision(self):
+        """Transition to 'en_revision' and store the user who did it."""
+        self.state = 'realizado'
+        self.revision_user_id = self.env.user.id
+
     # ----------------------------------------------------------
     # Transitions / Buttons
     # ----------------------------------------------------------
@@ -204,10 +215,18 @@ class QualityFormResponse(models.Model):
         required=True,
         ondelete='cascade'
     )
-    answer_text = fields.Char("Respuesta (Texto)")
-    answer_number = fields.Float("Respuesta (Número)")
-    answer_boolean = fields.Boolean("Respuesta (Sí/No)")
-    answer_date = fields.Date("Respuesta (Fecha)")
+    answer_text = fields.Char("Notas")
+    answer_number = fields.Float("Valor")
+    answer_boolean = fields.Boolean("Aprobado")
+    answer_date = fields.Date("Fecha")
+
+    # ----------------------------------------------------------
+    # populate the date automatically with the current date
+    # ----------------------------------------------------------
+    @api.model
+    def create(self, vals):
+        vals['answer_date'] = fields.Date.today()
+        return super(QualityFormResponse, self).create(vals)
 
     @api.onchange('question_id')
     def _onchange_question_type(self):

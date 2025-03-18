@@ -126,7 +126,7 @@
                     </group>
                     <notebook>
                         <page string="Respuestas">
-                            <field name="response_ids" attrs="{'invisible': [('property_id', '=', False)]}">
+                            <field name="response_ids">
                                 <tree editable="bottom" string="Respuestas" create="false" delete="false">
                                     <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
