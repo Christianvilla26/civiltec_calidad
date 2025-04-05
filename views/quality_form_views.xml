@@ -45,7 +45,7 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                ¡Cree su primera Plantilla de Formulario de Calidad!
+                ¡Cree su primera Formulario Estándar Usado de Calidad!
             </p>
         </field>
     </record>
@@ -91,7 +91,7 @@
         <field name="name">quality.form.instance.tree</field>
         <field name="model">quality.form.instance</field>
         <field name="arch" type="xml">
-            <tree string="Instancias de Formulario de Calidad">
+            <tree string="Revisiones por Propiedad">
                 <field name="name"/>
                 <field name="form_template_id"/>
                 <field name="property_id"/>
@@ -125,9 +125,9 @@
 
                     </group>
                     <notebook>
-                        <page string="Respuestas">
+                        <page string="Detalle de Revisión">
                             <field name="response_ids" attrs="{'invisible': [('property_id', '=', False)]}">
-                                <tree editable="bottom" string="Respuestas" create="false" delete="false">
+                                <tree editable="bottom" string="Detalle de Revisión" create="false" delete="false">
                                     <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
                                     <field name="answer_text"/>
@@ -151,7 +151,7 @@
 
     <!-- 6) QUALITY FORM INSTANCE ACTION -->
     <record id="action_quality_form_instance" model="ir.actions.act_window">
-        <field name="name">Instancias de Formulario de Calidad</field>
+        <field name="name">Revisiones por Propiedad</field>
         <field name="res_model">quality.form.instance</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -212,7 +212,7 @@
 
     <!-- <menuitem id="menu_quality_form_question" name="Preguntas de Formulario" parent="quality_menu_root" sequence="20" action="action_quality_form_question"/> -->
 
-    <menuitem id="menu_quality_form_instance" name="Instancias de Formulario" parent="quality_menu_root" sequence="30" action="action_quality_form_instance"/>
+    <menuitem id="menu_quality_form_instance" name="Revisiones por Propiedad" parent="quality_menu_root" sequence="30" action="action_quality_form_instance"/>
 
     <!-- Submenús + acciones para cada modelo -->
     <menuitem id="menu_quality_form_template" name="Plantillas de Formulario" parent="quality_menu_root" sequence="10" action="action_quality_form_template"/>

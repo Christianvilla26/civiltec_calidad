@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 class QualityFormTemplate(models.Model):
     _name = 'quality.form.template'
-    _description = 'Plantillas de Encuestas de Calidad'
+    _description = 'Plantillas de Formulario de Calidad'
 
     name = fields.Char("Nombre de la Plantilla", required=True)
     description = fields.Text("Descripción de la Plantilla")
@@ -28,15 +28,15 @@ class QualityFormQuestion(models.Model):
     name = fields.Char("Pregunta", required=True)
     form_template_id = fields.Many2one(
         'quality.form.template',
-        string="Plantilla de Formulario",
+        string="Formulario Estándar Usado",
         required=True,
         ondelete='cascade'
     )
     question_type = fields.Selection([
-        ('text', 'Texto'),
-        ('number', 'Número'),
-        ('boolean', 'Sí/No'),
-        ('date', 'Fecha'),
+        ('text', 'Detalle de Revisión'),
+        ('number', 'Valor Registrado'),
+        ('boolean', 'Aprobado'),
+        ('date', 'Fecha Revisión'),
     ], string="Tipo de Pregunta", default='text')
 
 
@@ -46,14 +46,14 @@ class QualityFormInstance(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
-        "Nombre de la Encuesta",
+        "Referencia Revisión",
         compute="_compute_form_instance_name",
         store=True,
         tracking=True
     )
     form_template_id = fields.Many2one(
         'quality.form.template',
-        string="Plantilla de Formulario",
+        string="Formulario Estándar Usado",
         required=True,
         tracking=True
     )
@@ -82,7 +82,7 @@ class QualityFormInstance(models.Model):
     response_ids = fields.One2many(
         'quality.form.response',
         'form_instance_id',
-        string="Respuestas"
+        string="Detalle de Revisión"
     )
 
     state = fields.Selection([
@@ -103,7 +103,7 @@ class QualityFormInstance(models.Model):
         """
         # Example: ensure there's at least one response
         if not self.response_ids:
-            raise ValidationError(_("No hay respuestas, no se puede pasar a 'En proceso'."))
+            raise ValidationError(_("No hay Detalle de Revisión, no se puede pasar a 'En proceso'."))
 
         # If all checks pass:
         self.state = 'en_proceso'
@@ -141,7 +141,7 @@ class QualityFormInstance(models.Model):
         for line in self.response_ids:
             if line.question_id.question_type in ('text', 'number') and not line.answer_text and not line.answer_number:
                 raise ValidationError(_(
-                    "La pregunta '%s' no está completamente respondida. Completa todas las respuestas antes de finalizar."
+                    "La pregunta '%s' no está completamente respondida. Completa todas las Detalle de Revisión antes de finalizar."
                 ) % line.question_text)
 
         # If all checks pass:
@@ -159,7 +159,7 @@ class QualityFormInstance(models.Model):
     # ----------------------------------------------------------
     @api.depends('form_template_id', 'property_id')
     def _compute_form_instance_name(self):
-        """Calcula el nombre de la encuesta combinando la plantilla y la propiedad."""
+        """Calcula el Referencia Revisión combinando la plantilla y la propiedad."""
         for record in self:
             record.name = f'{record.form_template_id.name} - {record.property_id.name}'
 
@@ -186,7 +186,7 @@ class QualityFormInstance(models.Model):
 
 class QualityFormResponse(models.Model):
     _name = 'quality.form.response'
-    _description = 'Respuestas de Encuestas'
+    _description = 'Detalle de Revisión'
 
     question_id = fields.Many2one(
         'quality.form.question',
@@ -195,7 +195,7 @@ class QualityFormResponse(models.Model):
     )
     question_text = fields.Char(
         related='question_id.name',
-        string="Texto de la Pregunta",
+        string="Ítem de Revisión",
         store=True
     )
     form_instance_id = fields.Many2one(
@@ -204,10 +204,10 @@ class QualityFormResponse(models.Model):
         required=True,
         ondelete='cascade'
     )
-    answer_text = fields.Char("Respuesta (Texto)")
-    answer_number = fields.Float("Respuesta (Número)")
-    answer_boolean = fields.Boolean("Respuesta (Sí/No)")
-    answer_date = fields.Date("Respuesta (Fecha)")
+    answer_text = fields.Char("Detalle de Revisión")
+    answer_number = fields.Float("Valor Registrado")
+    answer_boolean = fields.Boolean("Aprobado")
+    answer_date = fields.Date("Fecha Revisión")
 
     @api.onchange('question_id')
     def _onchange_question_type(self):
