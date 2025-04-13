@@ -182,6 +182,11 @@ class QualityFormResponse(models.Model):
     answer_boolean = fields.Boolean("Aprobado" , tracking=True)
     answer_date = fields.Date("Fecha Revisión" , tracking=True)
 
+    @api.model
+    def create(self, vals):
+        vals['answer_date'] = fields.Date.today()
+        return super(QualityFormResponse, self).create(vals)
+
     @api.onchange('question_id')
     def _onchange_question_type(self):
         """Limpia los campos de respuesta si se selecciona otra pregunta."""

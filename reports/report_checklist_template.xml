@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- 1) The QWeb Template -->
     <template id="report_checklist_template">
         <!-- Use Odoo's standard layout for headers/footers -->
         <t t-call="web.basic_layout">
