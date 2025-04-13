@@ -4,6 +4,7 @@
     <template id="report_checklist_template">
         <!-- Use Odoo's standard layout for headers/footers -->
         <t t-call="web.basic_layout">
+          <t t-foreach="docs" t-as="doc">
             <div class="page">
                 <!-- Header Section -->
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -24,15 +25,17 @@
                     <tr>
                         <td style="width: 100px;"><strong>Proyecto</strong></td>
                         <td>
-                            <!-- Example: doc.property_id.name if referencing a property -->
-                            <span t-esc="doc.property_id.name or ''"/>
+                            <t t-foreach="doc.property_ids" t-as="property">
+                                <span t-esc="property.name"/>
+                                <br/>
+                            </t>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Apartamento</strong></td>
                         <td>
                             <!-- If you store apartment info in your model, reference it here -->
-                            <span t-esc="doc.apartment or ''"/>
+                            <!-- <span t-esc="doc.apartment or ''"/> -->
                         </td>
                     </tr>
                 </table>
@@ -75,13 +78,8 @@
                         <!-- End static rows -->
                     </tbody>
                 </table>
-
-                <!-- Optional Logo or Footer -->
-                <div style="text-align: right; margin-top: 20px;">
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % (company.logo.decode())" 
-                         style="max-height: 50px;" alt="Company Logo"/>
-                </div>
             </div>
+            </t>
         </t>
     </template>
 </odoo>

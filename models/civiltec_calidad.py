@@ -7,15 +7,15 @@ class QualityFormTemplate(models.Model):
     _name = 'quality.form.template'
     _description = 'Plantillas de Formulario de Calidad'
 
-    name = fields.Char("Nombre de la Plantilla", required=True)
-    description = fields.Text("Descripción de la Plantilla")
+    name = fields.Char("Nombre del Formulario Estándar", required=True)
+    description = fields.Text("Descripción")
     question_ids = fields.One2many(
         'quality.form.question',
         'form_template_id',
-        string="Preguntas"
+        string="Ítems de Revisión"
     )
     allow_multiple_properties = fields.Boolean(
-        "Permitir selección de múltiples Propiedades",
+        "¿Aplicable a Múltiples Propiedades?",
         default=False,
         help="Si se activa, en las encuestas se podrá seleccionar más de una propiedad."
     )
@@ -57,111 +57,37 @@ class QualityFormInstance(models.Model):
         required=True,
         tracking=True
     )
-    property_id = fields.Many2one(
-        'product.product',
-        string="Propiedad",
-        required=True,
-        domain=[('is_property', '=', True)],
-        tracking=True
-    )
-
     property_ids = fields.Many2many(
         'product.product',
         string="Propiedades",
         domain=[('is_property', '=', True)],
         tracking=True
     )
-
-     # Related field to show if multiple properties are allowed
     allow_multiple_properties = fields.Boolean(
         related='form_template_id.allow_multiple_properties',
         store=True,
         string="Permitir Múltiples Propiedades"
     )
-
     response_ids = fields.One2many(
         'quality.form.response',
         'form_instance_id',
-        string="Detalle de Revisión"
+        string="Detalle de Revisión",
+        tracking=True
     )
-
     state = fields.Selection([
         ('borrador', 'Borrador'),
-        ('en_proceso', 'En proceso'),
-        ('en_revision', 'Enviar para revisión'),
-        ('realizado', 'Realizado'),
+        ('en_proceso', 'Primera Revisión'),
+        ('en_revision', 'En Revisión Interna'),
+        ('realizado', 'Aprobado'),
         ('cancelado', 'Cancelado'),
     ], string="Estado", default='borrador', tracking=True)
 
-    # ----------------------------------------------------------
-    # Transitions / Buttons
-    # ----------------------------------------------------------
-
-    def action_en_proceso(self):
-        """
-        Validations before setting the record to 'en_proceso'.
-        """
-        # Example: ensure there's at least one response
-        if not self.response_ids:
-            raise ValidationError(_("No hay Detalle de Revisión, no se puede pasar a 'En proceso'."))
-
-        # If all checks pass:
-        self.state = 'en_proceso'
-
-    def action_en_revision(self):
-        """
-        Validations before setting the record to 'en_revision'.
-        Example: require every response to be filled if the question type demands it.
-        """
-        for line in self.response_ids:
-            # Suppose we want to ensure that 'answer_text' is filled for text questions,
-            # 'answer_number' for number questions, etc.
-            if line.question_id.question_type == 'text' and not line.answer_text:
-                raise ValidationError(_(
-                    "Debes responder la pregunta '%s' con texto antes de enviar a revisión."
-                ) % line.question_text)
-
-            if line.question_id.question_type == 'number' and not line.answer_number:
-                raise ValidationError(_(
-                    "Debes responder la pregunta '%s' con un número antes de enviar a revisión."
-                ) % line.question_text)
-
-            # You can add more checks for 'boolean' or 'date' if needed.
-
-        # If all checks pass:
-        self.state = 'en_revision'
-
-    def action_realizado(self):
-        """
-        Validations before marking the record as 'realizado'.
-        Example: ensure that the user has not left any question blank or incomplete.
-        """
-        # Maybe you require that absolutely all fields (text, number, etc.) are filled
-        # or any custom logic you need:
-        for line in self.response_ids:
-            if line.question_id.question_type in ('text', 'number') and not line.answer_text and not line.answer_number:
-                raise ValidationError(_(
-                    "La pregunta '%s' no está completamente respondida. Completa todas las Detalle de Revisión antes de finalizar."
-                ) % line.question_text)
-
-        # If all checks pass:
-        self.state = 'realizado'
-
-    def action_cancelar(self):
-        """
-        Validation before canceling the record, if needed.
-        """
-        # Example: check if user is sure or if certain conditions must be met
-        self.state = 'cancelado'
-
-    # ----------------------------------------------------------
-    # Compute & Onchange
-    # ----------------------------------------------------------
-    @api.depends('form_template_id', 'property_id')
+    @api.depends('form_template_id', 'property_ids')
     def _compute_form_instance_name(self):
-        """Calcula el Referencia Revisión combinando la plantilla y la propiedad."""
+        """Calcula el Referencia Revisión combinando la plantilla y las propiedades."""
         for record in self:
-            record.name = f'{record.form_template_id.name} - {record.property_id.name}'
+            property_names = ', '.join(record.property_ids.mapped('name'))
+            record.name = f'{record.form_template_id.name} - {property_names}'
 
     @api.onchange('form_template_id')
     def _onchange_form_template_id(self):
@@ -173,13 +99,60 @@ class QualityFormInstance(models.Model):
                 response_data.append((0, 0, {
                     'question_id': question.id,
                 }))
-            self.response_ids = response_data  # Asigna valores por defecto
+            self.response_ids = response_data
+
+    def _send_state_change_email(self):
+        """Send an email notification using the defined template."""
+        mail_template = self.env.ref('civiltec_calidad.email_template_quality_form_instance_state', raise_if_not_found=False)
+        if mail_template:
+            # Send the email using the record's id
+            mail_template.send_mail(self.id, force_send=True)
+
+    def action_en_proceso(self):
+        """
+        Validations before setting the record to 'en_proceso'.
+        """
+        if not self.response_ids:
+            raise ValidationError(_("No hay Detalle de Revisión, no se puede pasar a 'En proceso'."))
+        self.state = 'en_proceso'
+        self._send_state_change_email()
+
+    def action_en_revision(self):
+        """
+        Validations before setting the record to 'en_revision'.
+        """
+        for line in self.response_ids:
+            if not line.answer_text and not line.answer_number and not line.answer_boolean and not line.answer_date:
+                raise ValidationError(_(
+                    "Debes responder la pregunta '%s' antes de enviar a revisión."
+                ) % line.question_text)
+        self.state = 'en_revision'
+        self._send_state_change_email()
+
+    def action_realizado(self):
+        """
+        Validations before marking the record as 'realizado'.
+        """
+        for line in self.response_ids:
+            if line.question_id.question_type in ('text', 'number') and not line.answer_text and not line.answer_number:
+                raise ValidationError(_(
+                    "La pregunta '%s' no está completamente respondida. Completa todas las Detalle de Revisión antes de finalizar."
+                ) % line.question_text)
+        self.state = 'realizado'
+        self._send_state_change_email()
+
+    def action_cancelar(self):
+        """
+        Validation before canceling the record.
+        """
+        self.state = 'cancelado'
+        self._send_state_change_email()
 
     def unlink(self):
         """Only allow deletion if the record is in 'borrador' state."""
         for record in self:
             if record.state != 'borrador':
-                raise ValidationError("Solo se pueden eliminar registros en estado 'Borrador'.")
+                raise ValidationError(_("Solo se pueden eliminar registros en estado 'Borrador'."))
         return super(QualityFormInstance, self).unlink()
 
 
@@ -204,10 +177,10 @@ class QualityFormResponse(models.Model):
         required=True,
         ondelete='cascade'
     )
-    answer_text = fields.Char("Detalle de Revisión")
-    answer_number = fields.Float("Valor Registrado")
-    answer_boolean = fields.Boolean("Aprobado")
-    answer_date = fields.Date("Fecha Revisión")
+    answer_text = fields.Char("Detalle de Revisión", tracking=True)
+    answer_number = fields.Float("Valor Registrado", tracking=True)
+    answer_boolean = fields.Boolean("Aprobado" , tracking=True)
+    answer_date = fields.Date("Fecha Revisión" , tracking=True)
 
     @api.onchange('question_id')
     def _onchange_question_type(self):

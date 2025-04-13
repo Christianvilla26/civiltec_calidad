@@ -21,14 +21,14 @@
                     <group>
                         <field name="name"/>
                         <field name="description"/>
-                        <field name="allow_multiple_properties"/>
+                        <!-- <field name="allow_multiple_properties"/> -->
                     </group>
                     <notebook>
                         <page string="Preguntas">
                             <field name="question_ids">
                                 <tree editable="bottom" string="Preguntas">
                                     <field name="name"/>
-                                    <field name="question_type"/>
+                                    <!-- <field name="question_type"/> -->
                                 </tree>
                             </field>
                         </page>
@@ -94,7 +94,7 @@
             <tree string="Revisiones por Propiedad">
                 <field name="name"/>
                 <field name="form_template_id"/>
-                <field name="property_id"/>
+                <field name="property_ids"/>
             </tree>
         </field>
     </record>
@@ -118,15 +118,13 @@
                 <sheet>
                     <group>
                         <field name="name" readonly="1"/>
-                        <field name="allow_multiple_properties" invisible="1"/>
                         <field name="form_template_id" options="{'no_create': True}"/>
-                        <field name="property_id" options="{'no_create': True}" attrs="{'invisible': [('allow_multiple_properties', '=', True)]}"/>
-                        <field name="property_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('allow_multiple_properties', '=', False)]}"/>
+                        <field name="property_ids" widget="many2many_tags" options="{'no_create': True}"/>
 
                     </group>
                     <notebook>
                         <page string="Detalle de Revisión">
-                            <field name="response_ids" attrs="{'invisible': [('property_id', '=', False)]}">
+                            <field name="response_ids" attrs="{'invisible': [('property_ids', '=', False)]}">
                                 <tree editable="bottom" string="Detalle de Revisión" create="false" delete="false">
                                     <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
@@ -153,7 +151,7 @@
     <record id="action_quality_form_instance" model="ir.actions.act_window">
         <field name="name">Revisiones por Propiedad</field>
         <field name="res_model">quality.form.instance</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 ¡Cree su primera Instancia de Formulario de Calidad!
@@ -161,48 +159,29 @@
         </field>
     </record>
 
-    <!-- 7) QUALITY FORM RESPONSE VIEWS -->
-    <!-- <record id="view_quality_form_response_tree" model="ir.ui.view">
-        <field name="name">quality.form.response.tree</field>
-        <field name="model">quality.form.response</field>
-        <field name="arch" type="xml">
-            <tree string="Respuestas de Formulario de Calidad">
-                <field name="question_text"/>
-                <field name="answer_text"/>
-                <field name="answer_number"/>
-                <field name="answer_boolean"/>
-                <field name="answer_date"/>
-                <field name="form_instance_id"/>
-            </tree>
-        </field>
-    </record> -->
+    <record id="view_quality_form_instance_kanban" model="ir.ui.view">
+    <field name="name">quality.form.instance.kanban</field>
+    <field name="model">quality.form.instance</field>
+    <field name="arch" type="xml">
+        <kanban default_group_by="state">
+            <field name="state"/>
+            <field name="name"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div>
+                            <strong><field name="name"/></strong>
+                        </div>
+                        <div>
+                            <field name="state"/>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
 
-    <!-- <record id="view_quality_form_response_form" model="ir.ui.view">
-        <field name="name">quality.form.response.form</field>
-        <field name="model">quality.form.response</field>
-        <field name="arch" type="xml">
-            <form string="Respuesta de Formulario de Calidad">
-                <sheet>
-                    <group>
-                        <field name="question_id"/>
-                        <field name="question_text" readonly="1"/>
-                        <field name="answer_text"/>
-                        <field name="answer_number"/>
-                        <field name="answer_boolean"/>
-                        <field name="answer_date"/>
-                        <field name="form_instance_id"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record> -->
-
-    <!-- 8) QUALITY FORM RESPONSE ACTION -->
-    <!-- <record id="action_quality_form_response" model="ir.actions.act_window">
-        <field name="name">Respuestas de Formulario de Calidad</field>
-        <field name="res_model">quality.form.response</field>
-        <field name="view_mode">tree,form</field>
-    </record> -->
 
     <!-- MENÚS -->
     <!-- Menú de nivel superior (ajuste sequence o parent según necesidad) -->
@@ -218,4 +197,23 @@
     <menuitem id="menu_quality_form_template" name="Plantillas de Formulario" parent="quality_menu_root" sequence="10" action="action_quality_form_template"/>
 
     <!-- <menuitem id="menu_quality_form_response" name="Respuestas de Formulario" parent="quality_menu_root" sequence="40" action="action_quality_form_response"/> -->
+
+<record id="email_template_quality_form_instance_state" model="mail.template">
+    <field name="name">Notificación de Cambio de Estado - Formulario de Calidad</field>
+    <field name="model_id" ref="model_quality_form_instance"/>
+    <field name="subject"><![CDATA[Cambio de Estado: <t t-esc="object.name"/>]]></field>
+    <field name="email_from">${(object.user_id.email or '')|safe}</field>
+    <field name="email_to"><![CDATA[<t t-esc="object.create_uid.email"/>]]></field>
+    <field name="body_html">
+        <![CDATA[
+            <p>Estimado usuario,</p>
+            <p>El estado del formulario de calidad con referencia <strong><t t-esc="object.name"/></strong> ha cambiado a: <strong><t t-esc="object.state"/></strong>.</p>
+            <p>Por favor, revise el formulario para más detalles.</p>
+            <p>Saludos cordiales,</p>
+            <p>Su equipo de Calidad</p>
+        ]]>
+    </field>
+    <field name="auto_delete" eval="True"/>
+</record>
+
 </odoo>

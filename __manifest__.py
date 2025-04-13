@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Plataforma Arquitectura',
+    'name': 'Supervisión de Arquitectura',
     'version': '15.0',
     'category': 'Tools',
     'summary': 'Plataforma de arquitectura para civiltec',
