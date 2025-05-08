@@ -129,6 +129,14 @@
                             </tr>
                             <tr>
                                 <td>
+                                    <strong>Responsable</strong>
+                                </td>
+                                <td>
+                                    <span t-esc="doc.responsable_user_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <strong>Estado</strong>
                                 </td>
                                 <td>

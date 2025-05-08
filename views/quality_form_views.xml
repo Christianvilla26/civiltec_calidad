@@ -21,6 +21,7 @@
                     <group>
                         <field name="name"/>
                         <field name="description"/>
+                        <field name="default_responsable_user_id"/>
                         <!-- <field name="allow_multiple_properties"/> -->
                     </group>
                     <notebook>
@@ -119,6 +120,7 @@
                     <group>
                         <field name="name" readonly="1"/>
                         <field name="form_template_id" options="{'no_create': True}"/>
+                        <field name="responsable_user_id"/>
                         <field name="property_ids" widget="many2many_tags" options="{'no_create': True}"/>
 
                     </group>

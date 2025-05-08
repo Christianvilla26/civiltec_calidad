@@ -6,6 +6,10 @@ class QualityFormTemplate(models.Model):
     _name = 'quality.form.template'
     _description = 'Plantillas de Formulario de Calidad'
 
+    default_responsable_user_id = fields.Many2one(
+        'res.users',
+        string="Responsable por Defecto"
+    )
     name = fields.Char("Nombre del Formulario Estándar", required=True)
     description = fields.Text("Descripción")
     company_id = fields.Many2one(
@@ -55,6 +59,14 @@ class QualityFormInstance(models.Model):
         string="Empresa",
         required=True,
         default=lambda self: self.env.company
+    )
+
+    responsable_user_id = fields.Many2one(
+        'res.users',
+        string="Responsable",
+        related='form_template_id.default_responsable_user_id',
+        store=True,
+        readonly=False
     )
 
     name = fields.Char(
@@ -112,6 +124,10 @@ class QualityFormInstance(models.Model):
                     'question_id': question.id,
                 }))
             self.response_ids = response_data
+    def _onchange_responsable_user_id(self):
+        """Rellena responsable_user_id cuando se asigne responsable_user_id."""
+        if self.responsable_user_id:
+            self.responsable_user_id = self.responsable_user_id
 
     def _send_state_change_email(self):
         """Send an email notification using the defined template."""
