@@ -2,82 +2,174 @@
 <odoo>
     <template id="report_checklist_template">
         <!-- Use Odoo's standard layout for headers/footers -->
-        <t t-call="web.basic_layout">
-          <t t-foreach="docs" t-as="doc">
-            <div class="page">
-                <!-- Header Section -->
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <!-- Left side: Title -->
-                    <div>
-                        <h3 style="margin: 0;">F-FP-26 Check list de revisión de masilla y pintura</h3>
-                    </div>
-                    <!-- Right side: Version & Date -->
-                    <div style="text-align: right;">
-                        <p style="margin: 0;">Versión 1</p>
-                        <p style="margin: 0;">Junio 2024</p>
-                    </div>
-                </div>
-                <hr/>
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <style>
+                    .table {
+                    margin-bottom: 0px;
+                    }
+                    .personal-data-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    width: 100%;
+                    justify-content: center;
+                    border-radius: 5px;
+                    padding: 0.5rem;
+                    margin-bottom: 1rem;
+                    }
+                    .date-axel {
+                    width: 100%;
+                    text-align: right;
+                    margin-bottom: 1rem;
+                    }
+                    .title-acel {
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: 1rem;
+                    margin-top: 1rem;
+                    }
+                    .unit-data-container {
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                    gap: 0.5rem;
+                    width: 100%;
+                    justify-content: center;
+                    padding: 0.5rem;
+                    margin-bottom: 1rem;
+                    }
+                    .unit-data-item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    width: 100%;
+                    justify-content: center;
+                    align-items: baseline;
+                    text-align: left;
+                    }
+                    td.title-table {
+                    font-weight: bold;
+                    text-align: left;
+                    }
+                    td {
+                    text-align: right;
+                    width: auto;
+                    }
+                    .date-inv {
+                    text-align: left;
+                    }
+                    .custom-inv-table {
+                    width: 100%;
+                    margin-top: 2rem;
+                    }
+                    thead {
+                    background-color: #f5f5f5;
+                    }
+                    .start-header {
+                    text-align: left;
+                    }
+                    th {
+                    text-align: right;
+                    }
 
-                <!-- Project / Apartment Info -->
-                <table style="width: 100%; margin-bottom: 20px;">
-                    <tr>
-                        <td style="width: 100px;"><strong>Proyecto</strong></td>
-                        <td>
-                            <t t-foreach="doc.property_ids" t-as="property">
-                                <span t-esc="property.name"/>
-                                <br/>
-                            </t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Apartamento</strong></td>
-                        <td>
-                            <!-- If you store apartment info in your model, reference it here -->
-                            <!-- <span t-esc="doc.apartment or ''"/> -->
-                        </td>
-                    </tr>
-                </table>
+                    /* Table styles */
+                    table.custom-inv-table {
+                    border-collapse: separate !important;
+                    border-spacing: 0 10px;
+                    }
+                    table.custom-inv-table td, table.custom-inv-table th {
+                    border: none !important;
+                    padding: 8px;
+                    }
+                    /* Narration row styles */
+                    .narration-row td {
+                    border-top: none !important;
+                    border-bottom: 1px solid #dee2e6 !important;
+                    font-style: italic;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    }
+                </style>
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <!-- Header Section -->
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <!-- Left side: Title -->
+                            <div>
+                                <h3 style="margin: 0;"><t t-esc="doc.name"/></h3>
+                            </div>
+                            <!-- Right side: Version & Date -->
+                            <div style="text-align: right;">
+                                <p style="margin: 0;">Versión 1</p>
+                                <p style="margin: 0;"><t t-esc="time.strftime('%B %Y')"/></p>
+                            </div>
+                        </div>
+                        <hr/>
 
-                <!-- Main Checklist Table -->
-                <table class="table table-sm o_main_table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #000;">
-                            <th style="padding: 4px;">Check</th>
-                            <th style="padding: 4px;">Actividad</th>
-                            <th style="padding: 4px;">Observaciones</th>
-                            <th style="padding: 4px;">Revisado por</th>
-                            <th style="padding: 4px;">Validado por</th>
-                            <th style="padding: 4px;">Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example of two static rows; adapt to your logic or loop through doc.response_ids -->
-                        <tr>
-                            <!-- A simple checkbox box -->
-                            <td style="padding: 6px;">
-                                <div style="width: 14px; height: 14px; border: 1px solid #000;"></div>
-                            </td>
-                            <td style="padding: 6px;">Correcta terminación de masilla</td>
-                            <td style="padding: 6px;"></td>
-                            <td style="padding: 6px;"></td>
-                            <td style="padding: 6px;"></td>
-                            <td style="padding: 6px;"></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px;">
-                                <div style="width: 14px; height: 14px; border: 1px solid #000;"></div>
-                            </td>
-                            <td style="padding: 6px;">Correcta terminación de pintura</td>
-                            <td style="padding: 6px;"></td>
-                            <td style="padding: 6px;"></td>
-                            <td style="padding: 6px;"></td>
-                            <td style="padding: 6px;"></td>
-                        </tr>
-                        <!-- End static rows -->
-                    </tbody>
-                </table>
-            </div>
+                        <!-- Project / Apartment Info -->
+                        <table style="width: 100%; margin-bottom: 20px;">
+                            <tr>
+                                <td style="width: 100px;">
+                                    <strong>Proyecto</strong>
+                                </td>
+                                <td>
+                                    <span t-esc="doc.company_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Propiedades</strong>
+                                </td>
+                                <td>
+                                    <t t-foreach="doc.property_ids" t-as="property">
+                                        <span t-esc="property.name"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Estado</strong>
+                                </td>
+                                <td>
+                                    <span t-esc="doc.state.capitalize()" t-attf-style="color: {{ 'red' if doc.state == 'cancelado' else 'green' if doc.state == 'realizado' else 'inherit' }}"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Main Checklist Table -->
+                        <table class="table table-bordered table-sm o_main_table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #000;">
+                                    <th style="padding: 4px;">Ítem de revisión</th>
+                                    <th style="padding: 4px;">Detalle de Revisión</th>
+                                    <th style="padding: 4px;">Valor Registrado</th>
+                                    <th style="padding: 4px;">Aprobado</th>
+                                    <th style="padding: 4px;">Fecha Revisión</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.response_ids" t-as="response">
+                                    <td>
+                                        <span t-esc="response.question_text or '-'"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="response.answer_text or '-'"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="response.answer_number or '-'"/>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" t-att-checked="response.answer_boolean"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="response.answer_date or '-'"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
             </t>
         </t>
     </template>

@@ -1,7 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from collections import namedtuple
-from odoo.exceptions import ValidationError
 
 class QualityFormTemplate(models.Model):
     _name = 'quality.form.template'
@@ -9,6 +8,12 @@ class QualityFormTemplate(models.Model):
 
     name = fields.Char("Nombre del Formulario Estándar", required=True)
     description = fields.Text("Descripción")
+    company_id = fields.Many2one(
+        'res.company',
+        string="Empresa",
+        required=True,
+        default=lambda self: self.env.company
+    )
     question_ids = fields.One2many(
         'quality.form.question',
         'form_template_id',
@@ -44,6 +49,13 @@ class QualityFormInstance(models.Model):
     _name = 'quality.form.instance'
     _description = 'Encuestas de Calidad'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    company_id = fields.Many2one(
+        'res.company',
+        string="Empresa",
+        required=True,
+        default=lambda self: self.env.company
+    )
 
     name = fields.Char(
         "Referencia Revisión",
