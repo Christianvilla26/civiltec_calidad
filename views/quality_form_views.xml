@@ -187,7 +187,7 @@
 
     <!-- MENÚS -->
     <!-- Menú de nivel superior (ajuste sequence o parent según necesidad) -->
-    <menuitem id="quality_menu_root" name="Plataforma Arquitectura" sequence="10" groups="base.group_user"/>
+    <menuitem id="quality_menu_root" name="Plataforma Arquitectura" sequence="10" groups="base.group_user" web_icon="civiltec_calidad,static/description/icon.png"/>
 
 
 
