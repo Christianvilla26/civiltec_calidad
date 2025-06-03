@@ -131,7 +131,7 @@
                                     <field name="question_id" invisible="1"/>
                                     <field name="question_text" readonly="1"/>
                                     <field name="answer_text"/>
-                                    <field name="answer_number"/>
+                                    <field name="answer_number" invisible="1"/>
                                     <field name="answer_boolean"/>
                                     <field name="answer_date"/>
                                 </tree>

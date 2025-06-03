@@ -151,7 +151,7 @@
                                 <tr style="border-bottom: 1px solid #000;">
                                     <th style="padding: 4px;">Ítem de revisión</th>
                                     <th style="padding: 4px;">Detalle de Revisión</th>
-                                    <th style="padding: 4px;">Valor Registrado</th>
+                                    <!-- <th style="padding: 4px;">Valor Registrado</th> -->
                                     <th style="padding: 4px;">Aprobado</th>
                                     <th style="padding: 4px;">Fecha Revisión</th>
                                 </tr>
@@ -164,9 +164,9 @@
                                     <td>
                                         <span t-esc="response.answer_text or '-'"/>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <span t-esc="response.answer_number or '-'"/>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <input type="checkbox" t-att-checked="response.answer_boolean"/>
                                     </td>
