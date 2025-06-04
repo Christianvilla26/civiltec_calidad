@@ -106,15 +106,15 @@
         <field name="arch" type="xml">
             <form string="Instancia de Formulario de Calidad">
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="borrador,en_proceso,en_revision,realizado,cancelado" statusbar_status="borrador"/>
+                    <field name="state" widget="statusbar" statusbar_visible="no_listo,en_proceso,en_revision,realizado,cancelado" statusbar_status="no_listo"/>
 
-                    <button name="action_en_proceso" type="object" string="En proceso" states="borrador" class="oe_highlight"/>
+                    <button name="action_en_proceso" type="object" string="En proceso" states="no_listo" class="oe_highlight"/>
 
                     <button name="action_en_revision" type="object" string="Enviar para Revisión" states="en_proceso" class="oe_highlight"/>
 
                     <button name="action_realizado" type="object" string="Realizado" states="en_revision" class="oe_highlight"/>
 
-                    <button name="action_cancelar" type="object" string="Cancelar" states="borrador,en_proceso,en_revision" class="oe_highlight"/>
+                    <button name="action_cancelar" type="object" string="Cancelar" states="no_listo,en_proceso,en_revision" class="oe_highlight"/>
                 </header>
                 <sheet>
                     <group>

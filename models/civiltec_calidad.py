@@ -43,7 +43,6 @@ class QualityFormQuestion(models.Model):
     )
     question_type = fields.Selection([
         ('text', 'Detalle de Revisión'),
-        ('number', 'Valor Registrado'),
         ('boolean', 'Aprobado'),
         ('date', 'Fecha Revisión'),
     ], string="Tipo de Pregunta", default='text')
@@ -99,12 +98,11 @@ class QualityFormInstance(models.Model):
         tracking=True
     )
     state = fields.Selection([
-        ('borrador', 'Borrador'),
-        ('en_proceso', 'Primera Revisión'),
+        ('no_listo', 'No Listo'),
         ('en_revision', 'En Revisión Interna'),
         ('realizado', 'Aprobado'),
         ('cancelado', 'Cancelado'),
-    ], string="Estado", default='borrador', tracking=True)
+    ], string="Estado", default='no_listo', tracking=True)
 
     @api.depends('form_template_id', 'property_ids')
     def _compute_form_instance_name(self):
@@ -177,10 +175,10 @@ class QualityFormInstance(models.Model):
         self._send_state_change_email()
 
     def unlink(self):
-        """Only allow deletion if the record is in 'borrador' state."""
+        """Only allow deletion if the record is in 'no listo' state."""
         for record in self:
-            if record.state != 'borrador':
-                raise ValidationError(_("Solo se pueden eliminar registros en estado 'Borrador'."))
+            if record.state != 'no_listo':
+                raise ValidationError(_("Solo se pueden eliminar registros en estado 'no listo'."))
         return super(QualityFormInstance, self).unlink()
 
 
