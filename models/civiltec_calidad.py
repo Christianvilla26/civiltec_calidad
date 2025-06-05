@@ -135,15 +135,6 @@ class QualityFormInstance(models.Model):
             # Send the email using the record's id
             mail_template.send_mail(self.id, force_send=True)
 
-    def action_en_proceso(self):
-        """
-        Validations before setting the record to 'en_proceso'.
-        """
-        if not self.response_ids:
-            raise ValidationError(_("No hay Detalle de Revisión, no se puede pasar a 'En proceso'."))
-        self.state = 'en_proceso'
-        self._send_state_change_email()
-
     def action_en_revision(self):
         """
         Validations before setting the record to 'en_revision'.
