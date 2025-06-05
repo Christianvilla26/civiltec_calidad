@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from collections import namedtuple
+from odoo.exceptions import ValidationError
 
 class QualityFormTemplate(models.Model):
     _name = 'quality.form.template'
