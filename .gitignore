@@ -1,3 +1,11 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS Code settings
+.vscode/settings.json
+
 models/__pycache__/*
 models/__pycache__/civiltec_calidad.cpython-39.pyc
 __pycache__/__init__.cpython-39.pyc
@@ -9,7 +17,6 @@ __pycache__/__init__.cpython-39.pyc
 models/civiltec_calidad.py
 models/__pycache__/__init__.cpython-39.pyc
 models/__pycache__/civiltec_calidad.cpython-39.pyc
-.vscode/settings.json
 __pycache__/__init__.cpython-39.pyc
 models/__pycache__/__init__.cpython-39.pyc
 models/__pycache__/civiltec_calidad.cpython-39.pyc
