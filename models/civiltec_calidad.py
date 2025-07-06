@@ -9,7 +9,7 @@ class QualityFormTemplate(models.Model):
 
     default_responsable_user_id = fields.Many2one(
         'res.users',
-        string="Responsable por Defecto"
+        string="Ingeniero Responsable por Defecto"
     )
     name = fields.Char("Nombre del Formulario Estándar", required=True)
     description = fields.Text("Descripción")
@@ -63,10 +63,15 @@ class QualityFormInstance(models.Model):
 
     responsable_user_id = fields.Many2one(
         'res.users',
-        string="Responsable",
+        string="Ingeniero Responsable",
         related='form_template_id.default_responsable_user_id',
         store=True,
         readonly=False
+    )
+
+    residente_user_id = fields.Many2one(
+        'res.users',
+        string="Ingeniero Residente"
     )
 
     name = fields.Char(
@@ -79,7 +84,8 @@ class QualityFormInstance(models.Model):
         'quality.form.template',
         string="Formulario Estándar Usado",
         required=True,
-        tracking=True
+        tracking=True,
+        domain="[('company_id', '=', company_id)]"
     )
     property_ids = fields.Many2many(
         'product.product',
@@ -104,6 +110,12 @@ class QualityFormInstance(models.Model):
         ('realizado', 'Aprobado'),
         ('cancelado', 'Cancelado'),
     ], string="Estado", default='no_listo', tracking=True)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        args = args or []
+        args += [('company_id', '=', self.env.company.id)]
+        return super()._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     @api.depends('form_template_id', 'property_ids')
     def _compute_form_instance_name(self):
@@ -172,7 +184,6 @@ class QualityFormInstance(models.Model):
             if record.state != 'no_listo':
                 raise ValidationError(_("Solo se pueden eliminar registros en estado 'no listo'."))
         return super(QualityFormInstance, self).unlink()
-
 
 
 class QualityFormResponse(models.Model):

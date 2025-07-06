@@ -50,44 +50,7 @@
             </p>
         </field>
     </record>
-
-    <!-- 3) QUALITY FORM QUESTION VIEWS -->
-    <!-- <record id="view_quality_form_question_tree" model="ir.ui.view">
-        <field name="name">quality.form.question.tree</field>
-        <field name="model">quality.form.question</field>
-        <field name="arch" type="xml">
-            <tree string="Preguntas de Formulario de Calidad">
-                <field name="name"/>
-                <field name="question_type"/>
-                <field name="form_template_id"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_quality_form_question_form" model="ir.ui.view">
-        <field name="name">quality.form.question.form</field>
-        <field name="model">quality.form.question</field>
-        <field name="arch" type="xml">
-            <form string="Pregunta de Formulario de Calidad">
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="question_type"/>
-                        <field name="form_template_id"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record> -->
-
-    <!-- 4) QUALITY FORM QUESTION ACTION -->
-    <!-- <record id="action_quality_form_question" model="ir.actions.act_window">
-        <field name="name">Preguntas de Formulario de Calidad</field>
-        <field name="res_model">quality.form.question</field>
-        <field name="view_mode">tree,form</field>
-    </record> -->
-
-    <!-- 5) QUALITY FORM INSTANCE VIEWS -->
+   
     <record id="view_quality_form_instance_tree" model="ir.ui.view">
         <field name="name">quality.form.instance.tree</field>
         <field name="model">quality.form.instance</field>
@@ -95,6 +58,8 @@
             <tree string="Revisiones por Propiedad">
                 <field name="name"/>
                 <field name="form_template_id"/>
+                <field name="responsable_user_id"/>
+                <field name="residente_user_id"/>
                 <field name="property_ids"/>
             </tree>
         </field>
@@ -118,9 +83,12 @@
                     <group>
                         <field name="name" readonly="1"/>
                         <field name="form_template_id" options="{'no_create': True}"/>
-                        <field name="responsable_user_id"/>
                         <field name="property_ids" widget="many2many_tags" options="{'no_create': True}"/>
-
+                        <field name="company_id"/>
+                    </group>
+                    <group>
+                        <field name="responsable_user_id" required="1"/>
+                        <field name="residente_user_id" required="1"/>
                     </group>
                     <notebook>
                         <page string="Detalle de Revisión">
@@ -201,9 +169,9 @@
 <record id="email_template_quality_form_instance_state" model="mail.template">
     <field name="name">Notificación de Cambio de Estado - Formulario de Calidad</field>
     <field name="model_id" ref="model_quality_form_instance"/>
-    <field name="subject"><![CDATA[Cambio de Estado: <t t-esc="object.name"/>]]></field>
-    <field name="email_from">${(object.user_id.email or '')|safe}</field>
-    <field name="email_to"><![CDATA[<t t-esc="object.create_uid.email"/>]]></field>
+    <field name="subject">Cambio de Estado: {{ object.name }}</field>
+    <field name="email_from">{{(object.responsable_user_id.email or '')}}</field>
+    <field name="email_to">{{(object.residente_user_id.email or '')}}</field>
     <field name="body_html">
         <![CDATA[
             <p>Estimado usuario,</p>
