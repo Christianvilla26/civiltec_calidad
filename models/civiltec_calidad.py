@@ -178,12 +178,12 @@ class QualityFormInstance(models.Model):
         self.state = 'cancelado'
         self._send_state_change_email()
 
-    def unlink(self):
-        """Only allow deletion if the record is in 'no listo' state."""
-        for record in self:
-            if record.state != 'no_listo':
-                raise ValidationError(_("Solo se pueden eliminar registros en estado 'no listo'."))
-        return super(QualityFormInstance, self).unlink()
+    # def unlink(self):
+    #     """Only allow deletion if the record is in 'no listo' state."""
+    #     for record in self:
+    #         if record.state != 'no_listo':
+    #             raise ValidationError(_("Solo se pueden eliminar registros en estado 'no listo'."))
+    #     return super(QualityFormInstance, self).unlink()
 
 
 class QualityFormResponse(models.Model):
